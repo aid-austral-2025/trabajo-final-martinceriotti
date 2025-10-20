@@ -1,28 +1,116 @@
 ---
 title: "Trabajo Final"
 format: html
+lang: es
+author:
+  name: "Martín Ceriotti"
+  affiliation: "Universidad Austral"
 editor: visual
+toc: true
+toc-location: left
+toc-title: "Tabla de contenidos"
 html:
     embed-resources: true
 ---
 
-## Quarto
+## Trabajo Práctico Final de Análisis Inteligente de Datos.
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+Como hijo de productores agropecuarios, siempre estuve relacionado con la producción de distintos cultivos en la región central de la provincia de Santa Fe. Desde pequeño he visto como las distintas "variables" afectaban tanto la producción como el humor familiar.
 
-## Running Code
+El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo en la República Argentina. Estos datos fueron descargados del sitio web de la Secretaría de Agricultura , Ganadería y Pesca [https://datos.magyp.gob.ar](https://datos.magyp.gob.ar/ "Secretaría de Agricultura , Ganadería y Pesca de la República Argentina")
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Descripción de los datos {#sec-descripción-de-los-datos}
+
+| Título de la columna | Tipo de dato | Descripción |
+|----------------------|-------------------|-------------------------------|
+| cultivo_nombre  | Texto (string) | Nombre del cultivo.  |
+| anio  | Número entero (integer) | Año al que corresponden los datos.  |
+| campania  | Texto (string) | Campaña en la que se desarrollo el cultivo.  |
+| provincia_nombre | Texto (string) | Nombre de la provincia.  |
+| provincia_id  | Texto (string) | Código de la provincia.  |
+| departamento_nombre  | Texto (string) | Nombre del departamento.  |
+| departamento_id  | Texto (string) | Código del departamento.  |
+| superficie_sembrada_ha | Número entero (integer) | Superficie sembrada en hectáreas.  |
+| superficie_cosechada_ha | Número entero (integer) | Superficie cosechada en hectáreas.  |
+| produccion_tm  | Número entero (integer) | Producción en toneladas.  |
+| rendimiento_kgxha | Número entero (integer) | Rendimiento en kilos por hectárea.  |
 
 ```{r}
-1 + 1
+#| message: false
+#| warning: false
+#| include: false
+#| paged-print: false
+library(tidyverse)
+maiz_serie_1923_2023 <- read_csv("data/maiz-serie-1923-2023.csv", 
+                                 col_types = cols(anio = col_integer()), 
+                                 locale = locale(encoding = "latin1"))
+
+soja_serie_1941_2023 <- read_csv("data/soja-serie-1941-2023.csv", 
+                                 col_types = cols(anio = col_integer()), 
+                                 locale = locale(encoding = "latin1"))
+
+trigo_serie_1927_2024 <- read_csv("data/trigo-serie-1927-2024.csv", 
+                                  col_types = cols(anio = col_integer()), 
+                                  locale = locale(encoding = "latin1"))
+# Filtramos 1947 / 2023 para tener todos los cultivos todos los años y poder hacer otros análisis.
+datos <- bind_rows(maiz_serie_1923_2023,soja_serie_1941_2023, trigo_serie_1927_2024) |> 
+  filter(anio >= 1947 & anio <= 2023)
+
+#Parámetros para todos los ggplots.
+
+theme_set(theme_light())
+options(repr.plot.width=15, repr.plot.height=8)
+
+# Evolución de las hectareas sembradas de cada cultivo.
+
 ```
 
-You can add options to executable code like this
+### Evolución de la siembra de los cultivos desde 1947 a 2023.
+
+```{r}
+#| label: grafico 1
+#| echo: false
+#| message: false
+#| warning: false
+#| paged-print: false
+
+datos |> 
+  group_by(anio, cultivo_nombre) |> 
+  summarise(superficie_sembrada_ha_total = sum(superficie_sembrada_ha)) |> 
+    ggplot() +
+      aes(x = anio, y = superficie_sembrada_ha_total / 1000000, colour = factor(cultivo_nombre)) +
+      geom_line(size = 0.9) +
+      geom_vline(
+        aes(xintercept = 1970),
+        lwd = 0.9, lineend = "round", col = "orange"
+      ) + #Comienza la siembra directa
+      geom_vline(
+        aes(xintercept = 2008),
+        lwd = 0.9, lineend = "round", 
+      ) + #Comienza la siembra directa
+      labs(x = 'Año', y = 'Superficie Sembrada en millones de ha.', color = "Cultivos") 
+
+```
+
+1970: Comienzo de la siembra directa en Argentina (fuente Aapresid - Asociación Argentina de Productores en Siembra Directa).
+
+2028: Comienzo del conflicto entre el gobierno nacional y los productores.
 
 ```{r}
 #| echo: false
-2 * 2
+#| message: false
+#| warning: false
+#| paged-print: false
+
+# Producción por Provincia.
+
+datos |> 
+  group_by(provincia_nombre, cultivo_nombre) |> 
+  summarise(superficie_sembrada_ha = sum(superficie_sembrada_ha)) |> 
+  ggplot() +
+    aes(x = superficie_sembrada_ha / 1000000, y = reorder(provincia_nombre, superficie_sembrada_ha), fill = cultivo_nombre) +
+    geom_bar(stat='identity') + 
+    facet_wrap(~ cultivo_nombre) 
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
