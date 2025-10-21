@@ -22,7 +22,7 @@ El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo 
 ## Descripción de los datos {#sec-descripción-de-los-datos}
 
 | Título de la columna | Tipo de dato | Descripción |
-|----------------------|-------------------|-------------------------------|
+|----|----|----|
 | cultivo_nombre  | Texto (string) | Nombre del cultivo.  |
 | anio  | Número entero (integer) | Año al que corresponden los datos.  |
 | campania  | Texto (string) | Campaña en la que se desarrollo el cultivo.  |
