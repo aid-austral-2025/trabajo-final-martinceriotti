@@ -22,7 +22,7 @@ El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo 
 ## Descripción de los datos {#sec-descripción-de-los-datos}
 
 | Título de la columna | Tipo de dato | Descripción |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | cultivo_nombre  | Texto (string) | Nombre del cultivo.  |
 | anio  | Número entero (integer) | Año al que corresponden los datos.  |
 | campania  | Texto (string) | Campaña en la que se desarrollo el cultivo.  |
@@ -88,13 +88,22 @@ datos |>
         aes(xintercept = 2008),
         lwd = 0.9, lineend = "round", 
       ) + #Comienza la siembra directa
-      labs(x = 'Año', y = 'Superficie Sembrada en millones de ha.', color = "Cultivos") 
+      labs(x = 'Año', y = 'Superficie Sembrada en millones de ha.', color = "Cultivos", title = "Gráfico 1: Evolución de la superficie sembrada.", subtitle = "En millones de hectárea") 
+
 
 ```
 
-1970: Comienzo de la siembra directa en Argentina (fuente Aapresid - Asociación Argentina de Productores en Siembra Directa).
+------------------------------------------------------------------------
 
-2028: Comienzo del conflicto entre el gobierno nacional y los productores.
+**1970**: Comienzo de la siembra directa en Argentina (fuente Aapresid - Asociación Argentina de Productores en Siembra Directa).
+
+**2008**: Comienzo del conflicto entre el gobierno nacional y los productores.
+
+En el gráfico 1 se puede apreciar el crecimiento exponencial a partir del año 1970 cuando se comienza a usar la siembra directa (se siembra directamente sobre el rastrojo del cultivo anterior, sin labrar el suelo previamente).
+
+En 2008 ese crecimiento se detiene. El conflicto del campo fue una profunda disputa entre el gobierno nacional y el sector agropecuario, originada por la Resolución 125/2008, que establecía un sistema de retenciones móviles a las exportaciones de granos, especialmente soja.
+
+------------------------------------------------------------------------
 
 ```{r}
 #| echo: false
