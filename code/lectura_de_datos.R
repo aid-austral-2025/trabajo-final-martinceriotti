@@ -1,6 +1,7 @@
 library(tidyverse)
 library(janitor)
 library(RColorBrewer)
+library(gganimate)
 # ===========================================
 #            lectura de datos.
 # ===========================================
@@ -58,7 +59,7 @@ library(dplyr)
 #'
 #' En la primera version de la funcion, encontre que los departamentos con menos datos
 #' tenian ventaja. Entonces completamos la serie para todos.
-
+ 
 analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
   
   # Rango total de años presentes en el dataset
@@ -72,7 +73,7 @@ analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
       anio = full_seq(años_totales, 1)
     )
   
-  data |>
+  data_completa  |>
     arrange(provincia_nombre, departamento_nombre, anio) |>
     group_by(provincia_nombre, departamento_nombre) |>
     mutate(crecio = {{ variable }} > lag({{ variable }})) |>
@@ -93,7 +94,7 @@ maiz_serie_1923_2023  <- analizar_crecimiento(maiz_serie_1923_2023)
 
 # Filtramos 1947 / 2023 para tener todos los cultivos todos los años y poder hacer otros análisis.
 
-+datos <- bind_rows(maiz_serie_1923_2023, soja_serie_1941_2023, trigo_serie_1927_2024) |>
+datos <- bind_rows(maiz_serie_1923_2023, soja_serie_1941_2023, trigo_serie_1927_2024) |>
   filter(anio >= 1947 & anio <= 2023)
 
 # Parámetros Generales para todos los gráficos.
@@ -238,7 +239,7 @@ datos_por_anio_provincia <-
 datos_por_anio_provincia
 
 
-#========================= MAPAS ARG
+#========================= MAPAS ARG =====================================
 
 library(plotly)
 library(sf)
@@ -252,3 +253,44 @@ library(geojsonio)
 arg_provincias <- rnaturalearth::ne_states(country = "Argentina", returnclass = "sf")
 usethis::create_github_token()
 gitcreds::gitcreds_set()
+
+
+#======================= ANIMACIONES ====================================
+
+#=====================================================================================
+# USAR THE R GALLERY / WTF VISUALIZATION para reirse de lo que no hay que hacer.
+# CLASE VISUALIZACIONES
+#=====================================================================================
+
+paquetes <-
+  c("tidyverse", "cowplot", "ggridges", "ggbeeswarm", "GGally", "plotly",
+    "treemapify", "car", "vcd", "colorspace", "ggcleveland", "corrplot", "readxl",
+    "lubridate", "gganimate", "gapminder", "forcats", "janitor", "ggforce",
+    "ggalluvial")
+
+# Revisar ideas en kaggle
+g <- 
+  ggplot(data = gapminder) +
+  aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent) +
+  geom_point(alpha = 0.7, show.legend = FALSE) + 
+  scale_size(guide = "none") + 
+  scale_x_continuous()+
+  facet_wrap(~year)+
+  transition_time(year)+
+  labs(
+    title = 'Año: {frame_time}',
+    x = "esto es x"
+  )
+
+datos |> 
+  ggplot() + 
+  aes(x = cultivo_nombre, y = rendimiento_kgxha, fill = cultivo_nombre) +
+    geom_boxplot() + 
+    coord_flip() +
+    scale_fill_brewer(palette = "Dark2") +
+    theme(legend.position = "none") +
+    labs(
+        title = 'Año: {frame_time}',
+        x = "esto es x",
+        y = "esto es y"
+  )
