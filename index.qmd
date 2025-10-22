@@ -22,7 +22,7 @@ El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo 
 ## Descripción de los datos {#sec-descripción-de-los-datos}
 
 | Título de la columna | Tipo de dato | Descripción |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | cultivo_nombre  | Texto (string) | Nombre del cultivo.  |
 | anio  | Número entero (integer) | Año al que corresponden los datos.  |
 | campania  | Texto (string) | Campaña en la que se desarrollo el cultivo.  |
@@ -65,6 +65,8 @@ options(repr.plot.width=15, repr.plot.height=8)
 
 ```
 
+## Gráficos
+
 ### Evolución de la siembra de los cultivos desde 1947 a 2023.
 
 ```{r}
@@ -74,36 +76,53 @@ options(repr.plot.width=15, repr.plot.height=8)
 #| warning: false
 #| paged-print: false
 
-datos |> 
-  group_by(anio, cultivo_nombre) |> 
-  summarise(superficie_sembrada_ha_total = sum(superficie_sembrada_ha)) |> 
-    ggplot() +
-      aes(x = anio, y = superficie_sembrada_ha_total / 1000000, colour = factor(cultivo_nombre)) +
-      geom_line(size = 0.9) +
-      geom_vline(
-        aes(xintercept = 1970),
-        lwd = 0.9, lineend = "round", col = "orange"
-      ) + #Comienza la siembra directa
-      geom_vline(
-        aes(xintercept = 2008),
-        lwd = 0.9, lineend = "round", 
-      ) + #Comienza la siembra directa
-      labs(x = 'Año', y = 'Superficie Sembrada en millones de ha.', color = "Cultivos", title = "Gráfico 1: Evolución de la superficie sembrada.", subtitle = "En millones de hectárea") 
+library(ggrepel)
+datos |>
+  group_by(anio, cultivo_nombre) |>
+  summarise(superficie_sembrada_ha_total = sum(superficie_sembrada_ha)) |>
+  ggplot() +
+  aes(x = anio, y = superficie_sembrada_ha_total / 1000000, colour = factor(cultivo_nombre)) +
+  geom_line(size = 0.9) +
+  geom_vline(
+    aes(xintercept = 1970, linetype = "Comienzo Siembra directa\nFuente: AAPRESID"),
+    lwd = 0.9, lineend = "round", col = "orange"
+  ) + # Comienza la siembra directa
+  geom_vline(
+    aes(xintercept = 2008, linetype = "Conflicto con\nel campo"),
+    lwd = 0.9, lineend = "round",
+  ) + # Comienza la siembra directa
+    labs(x = 'Año', y = 'Superficie Sembrada en millones de ha.', color = "Cultivos", title = "Gráfico 1: Evolución de la superficie sembrada.", subtitle = "En millones de hectáreas") +
+  scale_colour_brewer(palette = "Dark2") +
+  geom_text_repel(
+    data = \(d) d |>
+      group_by(cultivo_nombre) |>
+      filter(anio == max(anio)),
+    aes(label = cultivo_nombre),
+    nudge_x = 1.5, # desplaza un poco a la derecha del último punto
+    direction = "y",
+    hjust = 0,
+    segment.color = NA, # sin líneas de unión
+    size = 3
+  ) + # nombre al final de las lineas
+  theme(legend.position = "none")
+
 
 
 ```
 
 ------------------------------------------------------------------------
 
-**1970**: Comienzo de la siembra directa en Argentina (fuente Aapresid - Asociación Argentina de Productores en Siembra Directa).
+**1970:** Comienzo de la siembra directa en Argentina (fuente: Aapresid - Asociación Argentina de Productores en Siembra Directa).
 
-**2008**: Comienzo del conflicto entre el gobierno nacional y los productores.
+**2008:** Inicio del conflicto entre el gobierno nacional y los productores agropecuarios.
 
-En el gráfico 1 se puede apreciar el crecimiento exponencial a partir del año 1970 cuando se comienza a usar la siembra directa (se siembra directamente sobre el rastrojo del cultivo anterior, sin labrar el suelo previamente).
+En el Gráfico 1 se aprecia el crecimiento exponencial a partir de 1970, cuando se comenzó a utilizar la siembra directa — una técnica que consiste en sembrar directamente sobre el rastrojo del cultivo anterior, sin labrar previamente el suelo.
 
-En 2008 ese crecimiento se detiene. El conflicto del campo fue una profunda disputa entre el gobierno nacional y el sector agropecuario, originada por la Resolución 125/2008, que establecía un sistema de retenciones móviles a las exportaciones de granos, especialmente soja.
+En 2008, dicho crecimiento se detiene. El conflicto del campo fue una profunda disputa entre el gobierno nacional y el sector agropecuario, originada por la Resolución 125/2008, que establecía un sistema de retenciones móviles a las exportaciones de granos, especialmente soja. Esta medida redujo los incentivos para producir y provocó una disminución en la superficie sembrada.
 
-------------------------------------------------------------------------
+En el caso del trigo, la serie se mantiene relativamente estable. Para el maíz podemos notar que en 2008, se comienza a elegir este cultivo con menos retenciones en lugar de la soja.
+
+### Superficie sembrada histórica por provincia y cultivo.
 
 ```{r}
 #| echo: false
@@ -117,9 +136,14 @@ datos |>
   group_by(provincia_nombre, cultivo_nombre) |> 
   summarise(superficie_sembrada_ha = sum(superficie_sembrada_ha)) |> 
   ggplot() +
-    aes(x = superficie_sembrada_ha / 1000000, y = reorder(provincia_nombre, superficie_sembrada_ha), fill = cultivo_nombre) +
+    aes(x = superficie_sembrada_ha / 1000000, 
+        y = reorder(provincia_nombre, superficie_sembrada_ha),
+        fill = cultivo_nombre) +
     geom_bar(stat='identity') + 
-    facet_wrap(~ cultivo_nombre) 
+    facet_wrap(~ cultivo_nombre) +
+    labs(y = 'Provincia', x = 'Superficie Sembrada en millones de ha.', color = "Cultivos", title = "Gráfico 2: Superficie sembrada total por provincia y cultivo.", subtitle = "En millones de hectáreas") +
+  theme(legend.position = "none") + 
+  scale_colour_brewer(palette = "Dark2") 
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).

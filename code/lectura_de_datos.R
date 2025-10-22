@@ -250,3 +250,5 @@ library(rnaturalearth)
 library(geojsonio)
 
 arg_provincias <- rnaturalearth::ne_states(country = "Argentina", returnclass = "sf")
+usethis::create_github_token()
+gitcreds::gitcreds_set()
