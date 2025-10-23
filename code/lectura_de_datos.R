@@ -33,24 +33,23 @@ trigo_serie_1927_2024 <- read_csv("data/trigo-serie-1927-2024.csv",
 
 library(dplyr)
 
-  
 
-# trigo_serie_1927_2024 |> 
+# trigo_serie_1927_2024 |>
 #   arrange( provincia_nombre, departamento_nombre, anio )|>     # Ordena los datos cronológicamente
-#   group_by( provincia_nombre, departamento_nombre ) |>          # Agrupa los datos por departamento 
+#   group_by( provincia_nombre, departamento_nombre ) |>          # Agrupa los datos por departamento
 #   mutate(
 #     crecio = superficie_sembrada_ha > lag(superficie_sembrada_ha)  #Compara cada año con el anterior
-#   ) |> 
+#   ) |>
 #   summarise(
 #     años_crecio = sum(crecio, na.rm = TRUE),   # Cuenta cuántas veces creció (TRUE se suma como 1)
 #     total_anios = n() - 1                      # Número de comparaciones posibles (n años = n-1 saltos)
-#   ) |> 
+#   ) |>
 #   mutate(
 #     pct_anios_crecio = años_crecio / total_anios  # Porcentaje de años en los que hubo crecimiento
-#   ) |> 
+#   ) |>
 #   arrange(desc(pct_anios_crecio))   # Ordena de mayor a menor crecimiento sostenido
 
-#===================== FUNCION DE CRECIMIENTO DE DEPARTAMENTO Formato ROXYGEN2=======================
+# ===================== FUNCION DE CRECIMIENTO DE DEPARTAMENTO Formato ROXYGEN2=======================
 
 #' Analiza el crecimiento sostenido de una variable en series de tiempo por departamento
 #'
@@ -59,12 +58,11 @@ library(dplyr)
 #'
 #' En la primera version de la funcion, encontre que los departamentos con menos datos
 #' tenian ventaja. Entonces completamos la serie para todos.
- 
+
 analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
-  
   # Rango total de años presentes en el dataset
   años_totales <- range(data$anio, na.rm = TRUE)
-  
+
   # Completar todas las combinaciones posibles de provincia, departamento y año
   data_completa <- data |>
     select(provincia_nombre, departamento_nombre, anio, {{ variable }}) |>
@@ -72,8 +70,8 @@ analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
       provincia_nombre, departamento_nombre,
       anio = full_seq(años_totales, 1)
     )
-  
-  data_completa  |>
+
+  data_completa |>
     arrange(provincia_nombre, departamento_nombre, anio) |>
     group_by(provincia_nombre, departamento_nombre) |>
     mutate(crecio = {{ variable }} > lag({{ variable }})) |>
@@ -88,8 +86,8 @@ analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
 }
 
 trigo_serie_1927_2024 <- analizar_crecimiento(trigo_serie_1927_2024)
-soja_serie_1941_2023  <- analizar_crecimiento(soja_serie_1941_2023)
-maiz_serie_1923_2023  <- analizar_crecimiento(maiz_serie_1923_2023)
+soja_serie_1941_2023 <- analizar_crecimiento(soja_serie_1941_2023)
+maiz_serie_1923_2023 <- analizar_crecimiento(maiz_serie_1923_2023)
 
 
 # Filtramos 1947 / 2023 para tener todos los cultivos todos los años y poder hacer otros análisis.
@@ -131,7 +129,45 @@ datos |>
     size = 3
   ) + # nombre al final de las lineas
   theme(legend.position = "none")
+
+# Evolución de las hectareas sembradas de cada cultivo.
+
 datos |>
+  filter(
+    provincia_nombre %in% c("Santiago del Estero", "San Luis", "Tucumán","Salta"),
+  #  provincia_nombre %in% c("Santa Fe"),
+    cultivo_nombre == "soja"
+  ) |>
+  group_by(anio, provincia_nombre) |>
+  summarise(superficie_sembrada_ha_total = sum(superficie_sembrada_ha)) |>
+  ggplot() +
+  aes(x = anio, y = superficie_sembrada_ha_total / 1000000, colour = factor(provincia_nombre)) +
+  geom_line(size = 0.9) +
+  geom_vline(
+    aes(xintercept = 1970, linetype = "Comienzo Siembra directa\nFuente: AAPRESID"),
+    lwd = 0.9, lineend = "round", col = "orange"
+  ) + # Comienza la siembra directa
+  geom_vline(
+    aes(xintercept = 2008, linetype = "Conflicto con\nel campo"),
+    lwd = 0.9, lineend = "round",
+  ) + # Comienza la siembra directa
+  labs(x = "Año", y = "Superficie Sembrada en millones de ha.") +
+  scale_colour_brewer(palette = "Dark2") +
+  geom_text_repel(
+    data = \(d) d |>
+      group_by(provincia_nombre) |>
+      filter(anio == max(anio)),
+    aes(label = provincia_nombre),
+    nudge_x = 1.5, # desplaza un poco a la derecha del último punto
+    direction = "y",
+    hjust = 0,
+    segment.color = NA, # sin líneas de unión
+    size = 3
+  ) + # nombre al final de las lineas
+  theme(legend.position = "none")
+
+
+ datos |>
   ungroup()
 
 # Producción por Provincia.
@@ -147,7 +183,9 @@ datos |>
   ) +
   geom_bar(stat = "identity") +
   facet_wrap(~cultivo_nombre) +
-  scale_fill_brewer(palette = "Dark2")
+  scale_fill_brewer(palette = "Dark2") +
+  theme(legend.position = "none")
+
 
 datos |>
   ungroup()
@@ -239,15 +277,15 @@ datos_por_anio_provincia <-
 datos_por_anio_provincia
 
 
-#========================= MAPAS ARG =====================================
+# ========================= MAPAS ARG =====================================
 
 library(plotly)
 library(sf)
 library(dplyr)
 library(rnaturalearth)
-#install.packages("devtools")
-#install.packages("rnaturalearth")
-#install.packages("geojsonio")
+# install.packages("devtools")
+# install.packages("rnaturalearth")
+# install.packages("geojsonio")
 library(geojsonio)
 
 arg_provincias <- rnaturalearth::ne_states(country = "Argentina", returnclass = "sf")
@@ -255,42 +293,49 @@ usethis::create_github_token()
 gitcreds::gitcreds_set()
 
 
-#======================= ANIMACIONES ====================================
+# ======================= ANIMACIONES ====================================
 
-#=====================================================================================
+# =====================================================================================
 # USAR THE R GALLERY / WTF VISUALIZATION para reirse de lo que no hay que hacer.
 # CLASE VISUALIZACIONES
-#=====================================================================================
+# =====================================================================================
 
 paquetes <-
-  c("tidyverse", "cowplot", "ggridges", "ggbeeswarm", "GGally", "plotly",
+  c(
+    "tidyverse", "cowplot", "ggridges", "ggbeeswarm", "GGally", "plotly",
     "treemapify", "car", "vcd", "colorspace", "ggcleveland", "corrplot", "readxl",
     "lubridate", "gganimate", "gapminder", "forcats", "janitor", "ggforce",
-    "ggalluvial")
+    "ggalluvial"
+  )
 
 # Revisar ideas en kaggle
-g <- 
+g <-
   ggplot(data = gapminder) +
-  aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent) +
-  geom_point(alpha = 0.7, show.legend = FALSE) + 
-  scale_size(guide = "none") + 
-  scale_x_continuous()+
-  facet_wrap(~year)+
-  transition_time(year)+
+  aes(
+    x = log(gdpPercap),
+    y = lifeExp,
+    size = pop,
+    colour = continent
+  ) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_size(guide = "none") +
+  scale_x_continuous() +
+  facet_wrap(~year) +
+  transition_time(year) +
   labs(
-    title = 'Año: {frame_time}',
+    title = "Año: {frame_time}",
     x = "esto es x"
   )
 
-datos |> 
-  ggplot() + 
+datos |>
+  ggplot() +
   aes(x = cultivo_nombre, y = rendimiento_kgxha, fill = cultivo_nombre) +
-    geom_boxplot() + 
-    coord_flip() +
-    scale_fill_brewer(palette = "Dark2") +
-    theme(legend.position = "none") +
-    labs(
-        title = 'Año: {frame_time}',
-        x = "esto es x",
-        y = "esto es y"
+  geom_boxplot() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2") +
+  theme(legend.position = "none") +
+  labs(
+    title = "Año: {frame_time}",
+    x = "esto es x",
+    y = "esto es y"
   )
