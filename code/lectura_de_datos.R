@@ -1,3 +1,8 @@
+library(leaflet)
+install.packages("leaflet")
+install.packages("DT")
+install.packages("shiny")
+install.packages("shinydashboard")
 library(tidyverse)
 library(janitor)
 library(RColorBrewer)

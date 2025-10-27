@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -35,6 +70,26 @@ ul.task-list li input[type="checkbox"] {
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="index_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="index_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="index_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+
+<script src="index_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="index_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="index_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="index_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="index_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="index_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
 
 
 </head>
@@ -52,7 +107,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#gráficos" id="toc-gráficos" class="nav-link" data-scroll-target="#gráficos">Gráficos</a>
   <ul class="collapse">
   <li><a href="#evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023." id="toc-evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023." class="nav-link" data-scroll-target="#evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023.">Evolución de la siembra de los cultivos desde 1947 a 2023.</a></li>
-  <li><a href="#superficie-sembrada-histórica-por-provincia-y-cultivo." id="toc-superficie-sembrada-histórica-por-provincia-y-cultivo." class="nav-link" data-scroll-target="#superficie-sembrada-histórica-por-provincia-y-cultivo.">Superficie sembrada histórica por provincia y cultivo.</a></li>
+  <li><a href="#superficie-histórica-sembrada-por-provincia-y-cultivo." id="toc-superficie-histórica-sembrada-por-provincia-y-cultivo." class="nav-link" data-scroll-target="#superficie-histórica-sembrada-por-provincia-y-cultivo.">Superficie histórica sembrada por provincia y cultivo.</a></li>
+  <li><a href="#impacto-de-la-desforestación." id="toc-impacto-de-la-desforestación." class="nav-link" data-scroll-target="#impacto-de-la-desforestación.">Impacto de la desforestación.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -96,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="trabajo-práctico-final-de-análisis-inteligente-de-datos." class="level2">
 <h2 class="anchored" data-anchor-id="trabajo-práctico-final-de-análisis-inteligente-de-datos.">Trabajo Práctico Final de Análisis Inteligente de Datos.</h2>
 <p>Como hijo de productores agropecuarios, siempre estuve relacionado con la producción de distintos cultivos en la región central de la provincia de Santa Fe. Desde pequeño he visto como las distintas “variables” afectaban tanto la producción como el humor familiar.</p>
-<p>El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo en la República Argentina. Estos datos fueron descargados del sitio web de la Secretaría de Agricultura , Ganadería y Pesca <a href="https://datos.magyp.gob.ar/" title="Secretaría de Agricultura , Ganadería y Pesca de la República Argentina">https://datos.magyp.gob.ar</a></p>
+<p>El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo en la República Argentina. Estos datos fueron descargados del sitio web de la Secretaría de Agricultura , Ganadería y Pesca <a href="https://datos.magyp.gob.ar/">https://datos.magyp.gob.ar</a> “Secretaría de Agricultura , Ganadería y Pesca de la República Argentina”)</p>
 </section>
 <section id="sec-descripción-de-los-datos" class="level2">
 <h2 class="anchored" data-anchor-id="sec-descripción-de-los-datos">Descripción de los datos</h2>
@@ -185,7 +241,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<hr>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -197,12 +252,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>En el Gráfico 1 se aprecia el crecimiento exponencial a partir de 1970, cuando se comenzó a utilizar la siembra directa — una técnica que consiste en sembrar directamente sobre el rastrojo del cultivo anterior, sin labrar previamente el suelo.</p>
-<p>En 2008, dicho crecimiento se detiene. El conflicto del campo fue una profunda disputa entre el gobierno nacional y el sector agropecuario, originada por la Resolución 125/2008, que establecía un sistema de retenciones móviles a las exportaciones de granos, especialmente soja. Esta medida redujo los incentivos para producir y provocó una disminución en la superficie sembrada.</p>
+<p>En el Gráfico 1 se aprecia el crecimiento exponencial a partir de 1970 de la superficie sembrada con soja, cuando se comenzó a utilizar la siembra directa — una técnica que consiste en sembrar directamente sobre el rastrojo del cultivo anterior, sin labrar previamente el suelo.</p>
+<p>En 2008, dicho crecimiento se detiene. El conflicto del campo fue una profunda disputa entre el gobierno nacional y el sector agropecuario, originada por la Resolución 125/2008, que establecía un sistema de retenciones móviles a las exportaciones de granos, especialmente soja.</p>
 <p>En el caso del trigo, la serie se mantiene relativamente estable. Para el maíz podemos notar que en 2008, se comienza a elegir este cultivo con menos retenciones en lugar de la soja.</p>
 </section>
-<section id="superficie-sembrada-histórica-por-provincia-y-cultivo." class="level3">
-<h3 class="anchored" data-anchor-id="superficie-sembrada-histórica-por-provincia-y-cultivo.">Superficie sembrada histórica por provincia y cultivo.</h3>
+<section id="superficie-histórica-sembrada-por-provincia-y-cultivo." class="level3">
+<h3 class="anchored" data-anchor-id="superficie-histórica-sembrada-por-provincia-y-cultivo.">Superficie histórica sembrada por provincia y cultivo.</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -213,6 +268,33 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Las provincias de mayor producción de los cultivos en estudio son Buenos Aires, Córdoba, Santa Fe, Entre Ríos y La Pampa.</p>
+</section>
+<section id="impacto-de-la-desforestación." class="level3">
+<h3 class="anchored" data-anchor-id="impacto-de-la-desforestación.">Impacto de la desforestación.</h3>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><a href="https://www.csjn.gov.ar/archivo-cij/nota-5036-La-Corte-dispuso-que-las-denuncias-sobre-nuevos-desmontes-en-Salta-deben-presentarse-ante-la-justicia-local.html">Denuncias por desforestación en Salta.</a></p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">DT.options =</span> <span class="fu">list</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bPaginate =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dom =</span> <span class="st">"ifrt"</span>, </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">language =</span> <span class="fu">list</span>(<span class="at">info =</span> <span class="st">"Showing _TOTAL_ entries"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(mtcars)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b71c7d3e53deb89ac2fa" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b71c7d3e53deb89ac2fa">{"x":{"filter":"none","vertical":false,"data":[["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280","Merc 280C","Merc 450SE","Merc 450SL","Merc 450SLC","Cadillac Fleetwood","Lincoln Continental","Chrysler Imperial","Fiat 128","Honda Civic","Toyota Corolla","Toyota Corona","Dodge Challenger","AMC Javelin","Camaro Z28","Pontiac Firebird","Fiat X1-9","Porsche 914-2","Lotus Europa","Ford Pantera L","Ferrari Dino","Maserati Bora","Volvo 142E"],[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],[6,6,4,6,8,6,8,4,4,6,6,8,8,8,8,8,8,4,4,4,4,8,8,8,8,4,4,4,8,6,8,4],[160,160,108,258,360,225,360,146.7,140.8,167.6,167.6,275.8,275.8,275.8,472,460,440,78.7,75.7,71.09999999999999,120.1,318,304,350,400,79,120.3,95.09999999999999,351,145,301,121],[110,110,93,110,175,105,245,62,95,123,123,180,180,180,205,215,230,66,52,65,97,150,150,245,175,66,91,113,264,175,335,109],[3.9,3.9,3.85,3.08,3.15,2.76,3.21,3.69,3.92,3.92,3.92,3.07,3.07,3.07,2.93,3,3.23,4.08,4.93,4.22,3.7,2.76,3.15,3.73,3.08,4.08,4.43,3.77,4.22,3.62,3.54,4.11],[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],[16.46,17.02,18.61,19.44,17.02,20.22,15.84,20,22.9,18.3,18.9,17.4,17.6,18,17.98,17.82,17.42,19.47,18.52,19.9,20.01,16.87,17.3,15.41,17.05,18.9,16.7,16.9,14.5,15.5,14.6,18.6],[0,0,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,1,0,0,0,1],[1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1],[4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,3,3,4,4,4,3,3,3,3,3,4,5,5,5,5,5,4],[4,4,1,1,2,1,4,2,2,4,4,3,3,3,4,4,4,1,2,1,1,2,2,4,2,1,2,2,4,6,8,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ifrt","language":{"info":"Showing _TOTAL_ entries"},"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"mpg","targets":1},{"name":"cyl","targets":2},{"name":"disp","targets":3},{"name":"hp","targets":4},{"name":"drat","targets":5},{"name":"wt","targets":6},{"name":"qsec","targets":7},{"name":"vs","targets":8},{"name":"am","targets":9},{"name":"gear","targets":10},{"name":"carb","targets":11}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 

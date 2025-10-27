@@ -153,5 +153,18 @@ Las provincias de mayor producción de los cultivos en estudio son Buenos Aires,
 ### Impacto de la desforestación.
 
 ::: {.callout-note appearance="simple"}
-[Denuncias por desforestación en Salta. ](https://www.csjn.gov.ar/archivo-cij/nota-5036-La-Corte-dispuso-que-las-denuncias-sobre-nuevos-desmontes-en-Salta-deben-presentarse-ante-la-justicia-local.html)
+[Denuncias por desforestación en Salta.](https://www.csjn.gov.ar/archivo-cij/nota-5036-La-Corte-dispuso-que-las-denuncias-sobre-nuevos-desmontes-en-Salta-deben-presentarse-ante-la-justicia-local.html)
 :::
+```{r}
+library(htmltools)
+
+div(
+style = "font-size: 48px; font-weight: bold; color: #2c3e50;",
+paste0(round(mean(datos$produccion_tm), 1), " tm")
+)
+datos |> 
+  group_by(campania, cultivo_nombre) |> 
+    summarise(produccion_tm = sum(produccion_tm)) |> 
+  arrange(desc(produccion_tm)) |> 
+  datatable()
+```
