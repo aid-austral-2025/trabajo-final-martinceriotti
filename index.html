@@ -21,41 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -70,26 +35,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="index_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="index_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-
-<link href="index_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-
-<script src="index_files/libs/datatables-binding-0.34.0/datatables.js"></script>
-
-<script src="index_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-
-<link href="index_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-
-<link href="index_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-
-<script src="index_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
-
-<link href="index_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
-
-<script src="index_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
-
 
 
 </head>
@@ -104,11 +49,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#trabajo-práctico-final-de-análisis-inteligente-de-datos." id="toc-trabajo-práctico-final-de-análisis-inteligente-de-datos." class="nav-link active" data-scroll-target="#trabajo-práctico-final-de-análisis-inteligente-de-datos.">Trabajo Práctico Final de Análisis Inteligente de Datos.</a></li>
   <li><a href="#sec-descripción-de-los-datos" id="toc-sec-descripción-de-los-datos" class="nav-link" data-scroll-target="#sec-descripción-de-los-datos">Descripción de los datos</a></li>
+  <li><a href="#análisis-gráfico-y-descriptivo-preliminar" id="toc-análisis-gráfico-y-descriptivo-preliminar" class="nav-link" data-scroll-target="#análisis-gráfico-y-descriptivo-preliminar">Análisis Gráfico y Descriptivo Preliminar</a>
+  <ul class="collapse">
+  <li><a href="#correlaciones" id="toc-correlaciones" class="nav-link" data-scroll-target="#correlaciones">Correlaciones</a></li>
+  <li><a href="#boxplot" id="toc-boxplot" class="nav-link" data-scroll-target="#boxplot">BoxPlot</a></li>
+  </ul></li>
   <li><a href="#gráficos" id="toc-gráficos" class="nav-link" data-scroll-target="#gráficos">Gráficos</a>
   <ul class="collapse">
   <li><a href="#evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023." id="toc-evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023." class="nav-link" data-scroll-target="#evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023.">Evolución de la siembra de los cultivos desde 1947 a 2023.</a></li>
   <li><a href="#superficie-histórica-sembrada-por-provincia-y-cultivo." id="toc-superficie-histórica-sembrada-por-provincia-y-cultivo." class="nav-link" data-scroll-target="#superficie-histórica-sembrada-por-provincia-y-cultivo.">Superficie histórica sembrada por provincia y cultivo.</a></li>
-  <li><a href="#impacto-de-la-desforestación." id="toc-impacto-de-la-desforestación." class="nav-link" data-scroll-target="#impacto-de-la-desforestación.">Impacto de la desforestación.</a></li>
+  <li><a href="#mejores-rindos-históricos-por-provincias-y-departamentos." id="toc-mejores-rindos-históricos-por-provincias-y-departamentos." class="nav-link" data-scroll-target="#mejores-rindos-históricos-por-provincias-y-departamentos.">Mejores Rindos Históricos por Provincias y Departamentos.</a></li>
+  <li><a href="#mejores-campañas-de-la-historia." id="toc-mejores-campañas-de-la-historia." class="nav-link" data-scroll-target="#mejores-campañas-de-la-historia.">Mejores Campañas de la historia.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -228,6 +179,157 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
+<section id="análisis-gráfico-y-descriptivo-preliminar" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-gráfico-y-descriptivo-preliminar">Análisis Gráfico y Descriptivo Preliminar</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 21%">
+<col style="width: 22%">
+<col style="width: 14%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">superficie_sembrada_ha</th>
+<th style="text-align: left;">superficie_cosechada_ha</th>
+<th style="text-align: left;">produccion_tm</th>
+<th style="text-align: left;">rendimiento_kgxha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">N° de valores</td>
+<td style="text-align: left;">57519.00</td>
+<td style="text-align: left;">56867.00</td>
+<td style="text-align: left;">56867.00</td>
+<td style="text-align: left;">56867.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">N° de ceros</td>
+<td style="text-align: left;">5.00</td>
+<td style="text-align: left;">1043.00</td>
+<td style="text-align: left;">1059.00</td>
+<td style="text-align: left;">1059.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">N° de NA</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">652.00</td>
+<td style="text-align: left;">652.00</td>
+<td style="text-align: left;">652.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mínimo</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Máximo</td>
+<td style="text-align: left;">894613.00</td>
+<td style="text-align: left;">883613.00</td>
+<td style="text-align: left;">3412500.00</td>
+<td style="text-align: left;">33333.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rango</td>
+<td style="text-align: left;">894613.00</td>
+<td style="text-align: left;">883613.00</td>
+<td style="text-align: left;">3412500.00</td>
+<td style="text-align: left;">33333.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Suma</td>
+<td style="text-align: left;">1265538340.00</td>
+<td style="text-align: left;">1145433611.00</td>
+<td style="text-align: left;">3258414957.00</td>
+<td style="text-align: left;">130276507.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mediana</td>
+<td style="text-align: left;">4220.00</td>
+<td style="text-align: left;">3500.00</td>
+<td style="text-align: left;">6600.00</td>
+<td style="text-align: left;">1769.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Media</td>
+<td style="text-align: left;">22002.09</td>
+<td style="text-align: left;">20142.33</td>
+<td style="text-align: left;">57298.87</td>
+<td style="text-align: left;">2290.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Error estándar de la media</td>
+<td style="text-align: left;">204.04</td>
+<td style="text-align: left;">197.66</td>
+<td style="text-align: left;">656.21</td>
+<td style="text-align: left;">7.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">IC 95% de la media</td>
+<td style="text-align: left;">399.92</td>
+<td style="text-align: left;">387.42</td>
+<td style="text-align: left;">1286.17</td>
+<td style="text-align: left;">14.78</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Varianza</td>
+<td style="text-align: left;">2394635897.27</td>
+<td style="text-align: left;">2221873388.86</td>
+<td style="text-align: left;">24487422836.29</td>
+<td style="text-align: left;">3231990.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Desviación estándar</td>
+<td style="text-align: left;">48935.02</td>
+<td style="text-align: left;">47136.75</td>
+<td style="text-align: left;">156484.58</td>
+<td style="text-align: left;">1797.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coeficiente de variación</td>
+<td style="text-align: left;">2.22</td>
+<td style="text-align: left;">2.34</td>
+<td style="text-align: left;">2.73</td>
+<td style="text-align: left;">0.78</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="correlaciones" class="level3">
+<h3 class="anchored" data-anchor-id="correlaciones">Correlaciones</h3>
+<p>Es de esperar que a las medidas estén correlacionadas dado que a mayor superficie sembrada se espera mayor produccion. La única que no está correlacionada es el rendimiento por ha.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="boxplot" class="level3">
+<h3 class="anchored" data-anchor-id="boxplot">BoxPlot</h3>
+<p>Hay gran variabilidad en los datos, ya que hay muchos departamentos de variado tamaño, con superficies y rindes de todo tipo.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="gráficos" class="level2">
 <h2 class="anchored" data-anchor-id="gráficos">Gráficos</h2>
 <section id="evolución-de-la-siembra-de-los-cultivos-desde-1947-a-2023." class="level3">
@@ -262,39 +364,175 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Las provincias de mayor producción de los cultivos en estudio son Buenos Aires, Córdoba, Santa Fe, Entre Ríos y La Pampa.</p>
 </section>
-<section id="impacto-de-la-desforestación." class="level3">
-<h3 class="anchored" data-anchor-id="impacto-de-la-desforestación.">Impacto de la desforestación.</h3>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="mejores-rindos-históricos-por-provincias-y-departamentos." class="level3">
+<h3 class="anchored" data-anchor-id="mejores-rindos-históricos-por-provincias-y-departamentos.">Mejores Rindos Históricos por Provincias y Departamentos.</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 22%">
+<col style="width: 26%">
+<col style="width: 20%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">anio</th>
+<th style="text-align: left;">provincia_nombre</th>
+<th style="text-align: left;">departamento_nombre</th>
+<th style="text-align: left;">cultivo_nombre</th>
+<th style="text-align: right;">rendimiento_kgxha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1994</td>
+<td style="text-align: left;">Tucumán</td>
+<td style="text-align: left;">Famaillá</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">33333</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1960</td>
+<td style="text-align: left;">Santa Fe</td>
+<td style="text-align: left;">Rosario</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">23700</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1964</td>
+<td style="text-align: left;">Córdoba</td>
+<td style="text-align: left;">Tercero Arriba</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">23000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1985</td>
+<td style="text-align: left;">Santa Fe</td>
+<td style="text-align: left;">Vera</td>
+<td style="text-align: left;">soja</td>
+<td style="text-align: right;">20000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2011</td>
+<td style="text-align: left;">Córdoba</td>
+<td style="text-align: left;">San Alberto</td>
+<td style="text-align: left;">soja</td>
+<td style="text-align: right;">19902</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1953</td>
+<td style="text-align: left;">Buenos Aires</td>
+<td style="text-align: left;">Junín</td>
+<td style="text-align: left;">trigo</td>
+<td style="text-align: right;">19000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2013</td>
+<td style="text-align: left;">Catamarca</td>
+<td style="text-align: left;">El Alto</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">14933</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2018</td>
+<td style="text-align: left;">San Luis</td>
+<td style="text-align: left;">Ayacucho</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">12500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">San Luis</td>
+<td style="text-align: left;">Ayacucho</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">12200</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1948</td>
+<td style="text-align: left;">Santa Fe</td>
+<td style="text-align: left;">San Justo</td>
+<td style="text-align: left;">maíz</td>
+<td style="text-align: right;">12000</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="callout-body-container">
-<p><a href="https://www.csjn.gov.ar/archivo-cij/nota-5036-La-Corte-dispuso-que-las-denuncias-sobre-nuevos-desmontes-en-Salta-deben-presentarse-ante-la-justicia-local.html">Denuncias por desforestación en Salta.</a></p>
 </div>
+</section>
+<section id="mejores-campañas-de-la-historia." class="level3">
+<h3 class="anchored" data-anchor-id="mejores-campañas-de-la-historia.">Mejores Campañas de la historia.</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">campania</th>
+<th style="text-align: right;">produccion_tm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2018/2019</td>
+<td style="text-align: right;">131584322</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2019/2020</td>
+<td style="text-align: right;">126953165</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2021/2022</td>
+<td style="text-align: right;">125048532</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2020/2021</td>
+<td style="text-align: right;">124387993</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2016/2017</td>
+<td style="text-align: right;">122857978</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023/2024</td>
+<td style="text-align: right;">121560870</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2015/2016</td>
+<td style="text-align: right;">110203053</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2014/2015</td>
+<td style="text-align: right;">109145803</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2017/2018</td>
+<td style="text-align: right;">99766295</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2013/2014</td>
+<td style="text-align: right;">95674224</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">DT.options =</span> <span class="fu">list</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bPaginate =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dom =</span> <span class="st">"ifrt"</span>, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">language =</span> <span class="fu">list</span>(<span class="at">info =</span> <span class="st">"Showing _TOTAL_ entries"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(mtcars)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-b71c7d3e53deb89ac2fa" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-b71c7d3e53deb89ac2fa">{"x":{"filter":"none","vertical":false,"data":[["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280","Merc 280C","Merc 450SE","Merc 450SL","Merc 450SLC","Cadillac Fleetwood","Lincoln Continental","Chrysler Imperial","Fiat 128","Honda Civic","Toyota Corolla","Toyota Corona","Dodge Challenger","AMC Javelin","Camaro Z28","Pontiac Firebird","Fiat X1-9","Porsche 914-2","Lotus Europa","Ford Pantera L","Ferrari Dino","Maserati Bora","Volvo 142E"],[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],[6,6,4,6,8,6,8,4,4,6,6,8,8,8,8,8,8,4,4,4,4,8,8,8,8,4,4,4,8,6,8,4],[160,160,108,258,360,225,360,146.7,140.8,167.6,167.6,275.8,275.8,275.8,472,460,440,78.7,75.7,71.09999999999999,120.1,318,304,350,400,79,120.3,95.09999999999999,351,145,301,121],[110,110,93,110,175,105,245,62,95,123,123,180,180,180,205,215,230,66,52,65,97,150,150,245,175,66,91,113,264,175,335,109],[3.9,3.9,3.85,3.08,3.15,2.76,3.21,3.69,3.92,3.92,3.92,3.07,3.07,3.07,2.93,3,3.23,4.08,4.93,4.22,3.7,2.76,3.15,3.73,3.08,4.08,4.43,3.77,4.22,3.62,3.54,4.11],[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],[16.46,17.02,18.61,19.44,17.02,20.22,15.84,20,22.9,18.3,18.9,17.4,17.6,18,17.98,17.82,17.42,19.47,18.52,19.9,20.01,16.87,17.3,15.41,17.05,18.9,16.7,16.9,14.5,15.5,14.6,18.6],[0,0,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,1,0,0,0,1],[1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1],[4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,3,3,4,4,4,3,3,3,3,3,4,5,5,5,5,5,4],[4,4,1,1,2,1,4,2,2,4,4,3,3,3,4,4,4,1,2,1,1,2,2,4,2,1,2,2,4,6,8,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ifrt","language":{"info":"Showing _TOTAL_ entries"},"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"mpg","targets":1},{"name":"cyl","targets":2},{"name":"disp","targets":3},{"name":"hp","targets":4},{"name":"drat","targets":5},{"name":"wt","targets":6},{"name":"qsec","targets":7},{"name":"vs","targets":8},{"name":"am","targets":9},{"name":"gear","targets":10},{"name":"carb","targets":11}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.gif" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 

@@ -41,6 +41,8 @@ El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo 
 #| include: false
 #| paged-print: false
 library(tidyverse)
+library(pastecs)
+library(kableExtra)
 maiz_serie_1923_2023 <- read_csv("data/maiz-serie-1923-2023.csv", 
                                  col_types = cols(anio = col_integer()), 
                                  locale = locale(encoding = "latin1"))
@@ -63,6 +65,76 @@ options(repr.plot.width=15, repr.plot.height=8)
 
 # Evolución de las hectareas sembradas de cada cultivo.
 
+```
+
+## Análisis Gráfico y Descriptivo Preliminar
+
+```{r}
+#| echo: false
+res <- datos |> 
+  select(superficie_sembrada_ha, superficie_cosechada_ha, produccion_tm,	rendimiento_kgxha) |> 
+  pastecs::stat.desc() %>%
+  as.matrix() %>%
+  as.data.frame() %>%
+  round(2)
+res <- format(res, digits = 2, nsmall = 2, scientific = FALSE)
+rownames(res) <- c(
+  "N° de valores",
+  "N° de ceros",
+  "N° de NA",
+  "Mínimo",
+  "Máximo",
+  "Rango",
+  "Suma",
+  "Mediana",
+  "Media",
+  "Error estándar de la media",
+  "IC 95% de la media",
+  "Varianza",
+  "Desviación estándar",
+  "Coeficiente de variación"
+)
+
+knitr::kable(data.frame(res),digits = 2)
+
+```
+
+### Correlaciones
+
+Es de esperar que a las medidas estén correlacionadas dado que a mayor superficie sembrada se espera mayor produccion. La única que no está correlacionada es el rendimiento por ha.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library("psych")
+datos |>
+  select(superficie_sembrada_ha, superficie_cosechada_ha, produccion_tm, rendimiento_kgxha) |>
+  pairs.panels(
+    method = "pearson", # correlation method
+    hist.col = "#00AFBB",
+    density = TRUE, # show density plots
+    ellipses = F # show correlation ellipses
+  )
+```
+
+### BoxPlot
+
+Hay gran variabilidad en los datos, ya que hay muchos departamentos de variado tamaño, con superficies y rindes de todo tipo.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ 
+
+dfInd<-
+  datos |>
+  select(superficie_sembrada_ha, superficie_cosechada_ha, produccion_tm, rendimiento_kgxha) |> 
+stack( )
+names(dfInd)<-c("valor","variable")
+ggplot(dfInd, aes(x = variable, y = valor)) +
+geom_boxplot()
 ```
 
 ## Gráficos
@@ -150,21 +222,89 @@ datos |>
 
 Las provincias de mayor producción de los cultivos en estudio son Buenos Aires, Córdoba, Santa Fe, Entre Ríos y La Pampa.
 
-### Impacto de la desforestación.
+### Mejores Rindos Históricos por Provincias y Departamentos.
 
-::: {.callout-note appearance="simple"}
-[Denuncias por desforestación en Salta.](https://www.csjn.gov.ar/archivo-cij/nota-5036-La-Corte-dispuso-que-las-denuncias-sobre-nuevos-desmontes-en-Salta-deben-presentarse-ante-la-justicia-local.html)
-:::
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 library(htmltools)
+res <- datos |> 
+  group_by(anio, provincia_nombre, departamento_nombre, cultivo_nombre) |> 
+     summarise(rendimiento_kgxha = max(rendimiento_kgxha, na.rm = TRUE)) |> 
+  ungroup() |>
+  arrange(desc(rendimiento_kgxha)) |>
+  slice_head(n = 10) 
 
-div(
-style = "font-size: 48px; font-weight: bold; color: #2c3e50;",
-paste0(round(mean(datos$produccion_tm), 1), " tm")
-)
-datos |> 
-  group_by(campania, cultivo_nombre) |> 
-    summarise(produccion_tm = sum(produccion_tm)) |> 
-  arrange(desc(produccion_tm)) |> 
-  datatable()
+knitr::kable(data.frame(res),digits = 2)
+```
+### Mejores Campañas de la historia.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(htmltools)
+res <- datos |> 
+  group_by(campania) |> 
+     summarise(produccion_tm = sum(produccion_tm, na.rm = TRUE)) |> 
+  ungroup() |>
+  arrange(desc(produccion_tm)) |>
+  slice_head(n = 10) 
+
+knitr::kable(data.frame(res),digits = 2)
+```
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+# datos |>
+#   ggplot(aes(x = superficie_sembrada_ha, y = superficie_cosechada_ha)) +
+#   geom_point(alpha = 0.6, color = "#00AFBB") +
+#   labs(
+#     title = "Relación entre superficie sembrada y cosechada",
+#     x = "Superficie sembrada (ha)",
+#     y = "Superficie cosechada (ha)"
+#   ) +
+#   theme_minimal()
+# datos |>
+#   ggplot(aes(
+#     x = superficie_sembrada_ha,
+#     y = superficie_cosechada_ha,
+#     size = produccion_tm     # <--- tamaño de la burbuja
+#   )) +
+#   geom_point(alpha = 0.6, color = "#00AFBB") +
+#   labs(
+#     title = "Relación entre superficie y producción",
+#     x = "Superficie sembrada (ha)",
+#     y = "Superficie cosechada (ha)",
+#     size = "Producción (toneladas)"
+#   ) +
+#   theme_minimal()
+library(ggplot2)
+library(gganimate)
+library(dplyr)
+
+animacion <- datos |>
+  ggplot(aes(
+    x = superficie_sembrada_ha,
+    y = superficie_cosechada_ha,
+    size = produccion_tm,
+    color = cultivo_nombre
+  )) +
+  geom_point(alpha = 0.7) +
+  scale_size_continuous(range = c(2, 12)) +
+  labs(
+    title = "Evolución de superficies y producción ({closest_state})",
+    subtitle = "Año: {closest_state}",
+    x = "Superficie sembrada (ha)",
+    y = "Superficie cosechada (ha)",
+    size = "Producción (t)",
+    color = "Cultivo"
+  ) +
+  theme_minimal() +
+  # 👇 Esta línea hace la magia:
+  transition_states(anio, transition_length = 1, state_length = 1) 
+animacion
 ```
