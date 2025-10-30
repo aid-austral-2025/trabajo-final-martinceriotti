@@ -116,7 +116,8 @@ datos |>
     method = "pearson", # correlation method
     hist.col = "#00AFBB",
     density = TRUE, # show density plots
-    ellipses = F # show correlation ellipses
+    ellipses = F, # show correlation ellipses
+    main = "Gráfico 1: Relaciones entre variables agrícolas" # título principal
   )
 ```
 
@@ -136,10 +137,13 @@ dfInd <-
   stack()
 names(dfInd) <- c("valor", "variable")
 ggplot(dfInd, aes(x = variable, y = valor)) +
-  geom_boxplot()
+  geom_boxplot()+
+  labs(
+    title = "Gráfico 2: Box Plots Medidas." 
+  )
 ```
 
-## Gráficos
+## Gráficos y Grillas.
 
 ### Evolución de la siembra de los cultivos desde 1947 a 2023.
 
@@ -165,7 +169,11 @@ datos |>
     aes(xintercept = 2008, linetype = "Conflicto con\nel campo"),
     lwd = 0.9, lineend = "round",
   ) + # Comienza la siembra directa
-  labs(x = "Año", y = "Superficie Sembrada en millones de ha.", color = "Cultivos", title = "Gráfico 1: Evolución de la superficie sembrada.", subtitle = "En millones de hectáreas") +
+  labs(x = "Año", 
+       y = "Superficie Sembrada en millones de ha.", 
+       color = "Cultivos", 
+       title = "Gráfico 3: Evolución de la superficie sembrada.", 
+       subtitle = "En millones de hectáreas") +
   scale_colour_brewer(palette = "Dark2") +
   geom_text_repel(
     data = \(d) d |>
@@ -210,7 +218,7 @@ datos |>
   labs(y = "Provincia", 
        x = "Superficie Sembrada en millones de ha.", 
        color = "Cultivos", 
-       title = "Gráfico 2: Superficie sembrada por provincia.", 
+       title = "Gráfico 4: Superficie sembrada por provincia.", 
        subtitle = "En millones de hectáreas") +
   aes(
     x = superficie_sembrada_ha / 1000000,
@@ -303,7 +311,7 @@ animacion <- datos |>
   geom_point(alpha = 0.7) +
   scale_size_continuous(range = c(2, 12)) +
   labs(
-    title = "Gráfico 3: Evolución de superficies y producción (Año: {closest_state})",
+    title = "Gráfico 5: Evolución de superficies y producción (Año: {closest_state})",
     subtitle = "Superficien en millones de ha.",
     x = "Superficie sembrada (ha)" ,
     y = "Superficie cosechada (ha)",
@@ -316,6 +324,8 @@ animacion <- datos |>
 animacion
 ```
 ```{r}
+#| eval: false
+#| include: false
 # Gráfico de puntos: rendimiento por departamento
 # ggplot(datos, aes(x = reorder(departamento_nombre, -rendimiento_kgxha),
 #                   y = rendimiento_kgxha,
@@ -347,7 +357,10 @@ animacion
 #   scale_fill_brewer(palette = "Dark2") +
 #   theme(legend.position = "none")
 ```
+### Relación Rendimiento - Producción por Departamento para cada cultivo.
+Podemos apreciar "outlier" planteados en la tabla de mejores rendimientos históricos, probablemente por fallas en la medición o carga de los datos antiguos.
 
+#### Trigo.
 ```{r}
 #| echo: false
 #| message: false
@@ -365,8 +378,6 @@ grafico <-
   filter(cultivo_nombre == "trigo") |>
   ggplot() +
   aes(
-    title = "Gráfico 4: Relación entre Rendimiento y Poducción para los Departamentos.",
-    subtitle = "Todas las provincias para toda la serie.",
     x = rendimiento_kgxha, 
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
@@ -374,7 +385,66 @@ grafico <-
   ) +
   geom_jitter(width = 0.5, height = 0, alpha = 0.5) +
   labs(
+    title = "Gráfico 6: Relación entre Rendimiento y Poducción para los Departamentos.",
+    subtitle = "Trigo.",
     x = "Rendimiento de Trigo (Kg / ha)", 
+    y = "Superficie Sembrada (en millones de ha.)",
+    color = "Provincia"
+  ) + 
+  scale_fill_brewer(palette = "Dark2") +
+  theme(legend.position = "none")
+
+ggplotly(grafico, tooltip = "text")
+
+```
+#### Maíz.
+```{r}
+#| echo: false
+#| warning: false
+  
+grafico <-
+  datos |>
+  filter(cultivo_nombre == "maíz") |>
+  ggplot() +
+  aes(
+    x = rendimiento_kgxha, 
+    y = superficie_sembrada_ha / 1000000,
+    color = provincia_nombre,
+    label = departamento_nombre, text = etiqueta
+  ) +
+  geom_jitter(width = 0.5, height = 0, alpha = 0.5) +
+  labs(
+    title = "Gráfico 7: Relación entre Rendimiento y Poducción para los Departamentos.",
+    subtitle = "Maíz.",
+    x = "Rendimiento de Maíz (Kg / ha)", 
+    y = "Superficie Sembrada (en millones de ha.)",
+    color = "Provincia"
+  ) + 
+  scale_fill_brewer(palette = "Dark2") +
+  theme(legend.position = "none")
+
+ggplotly(grafico, tooltip = "text")
+```
+#### Soja
+```{r}
+#| echo: false
+#| warning: false
+  
+grafico <-
+  datos |>
+  filter(cultivo_nombre == "soja") |>
+  ggplot() +
+  aes(
+    x = rendimiento_kgxha, 
+    y = superficie_sembrada_ha / 1000000,
+    color = provincia_nombre,
+    label = departamento_nombre, text = etiqueta
+  ) +
+  geom_jitter(width = 0.5, height = 0, alpha = 0.5) +
+  labs(
+    title = "Gráfico 8: Relación entre Rendimiento y Poducción para los Departamentos.",
+    subtitle = "Soja.",
+    x = "Rendimiento de Soja (Kg / ha)", 
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
   ) + 
