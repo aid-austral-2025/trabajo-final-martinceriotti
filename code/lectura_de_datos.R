@@ -7,6 +7,7 @@ library(tidyverse)
 library(janitor)
 library(RColorBrewer)
 library(gganimate)
+library(dplyr)
 # ===========================================
 #            lectura de datos.
 # ===========================================
@@ -28,6 +29,9 @@ trigo_serie_1927_2024 <- read_csv("data/trigo-serie-1927-2024.csv",
   locale = locale(encoding = "latin1")
 )
 
+datos <- bind_rows(maiz_serie_1923_2023, soja_serie_1941_2023, trigo_serie_1927_2024) |>
+  filter(anio >= 1947 & anio <= 2023)
+
 # # Revisamos cuando arranca cada serie de tiempo.
 # min(maiz_serie_1923_2023$anio)
 # max(maiz_serie_1923_2023$anio)
@@ -36,7 +40,7 @@ trigo_serie_1927_2024 <- read_csv("data/trigo-serie-1927-2024.csv",
 # min(trigo_serie_1927_2024$anio)
 # max(trigo_serie_1927_2024$anio)
 
-library(dplyr)
+
 
 
 # trigo_serie_1927_2024 |>
@@ -70,35 +74,67 @@ analizar_crecimiento <- function(data, variable = superficie_sembrada_ha) {
 
   # Completar todas las combinaciones posibles de provincia, departamento y año
   data_completa <- data |>
-    select(provincia_nombre, departamento_nombre, anio, {{ variable }}) |>
+    select(provincia_nombre, departamento_nombre, anio, cultivo_nombre ,{{ variable }}) |>
     complete(
-      provincia_nombre, departamento_nombre,
+      provincia_nombre, departamento_nombre,cultivo_nombre,
       anio = full_seq(años_totales, 1)
     )
 
-  data_completa |>
-    arrange(provincia_nombre, departamento_nombre, anio) |>
-    group_by(provincia_nombre, departamento_nombre) |>
+  data_completax <- data_completa |>
+    arrange(provincia_nombre, departamento_nombre, cultivo_nombre, anio) |>
+    group_by(provincia_nombre, departamento_nombre, cultivo_nombre) |>
     mutate(crecio = {{ variable }} > lag({{ variable }})) |>
     summarise(
       años_crecio = sum(crecio, na.rm = TRUE),
-      total_anios = n() - 1
+      total_anios = n() - 1,
+      .groups = "drop"
     ) |>
     mutate(
       pct_anios_crecio = años_crecio / total_anios
     ) |>
-    arrange(desc(pct_anios_crecio))
+    filter(años_crecio > 0) |> 
+    arrange(desc(pct_anios_crecio)) |> 
+    slice_head(n = 50)
+  
 }
 
-trigo_serie_1927_2024 <- analizar_crecimiento(trigo_serie_1927_2024)
-soja_serie_1941_2023 <- analizar_crecimiento(soja_serie_1941_2023)
-maiz_serie_1923_2023 <- analizar_crecimiento(maiz_serie_1923_2023)
+crecimiento_trigo <- analizar_crecimiento(trigo_serie_1927_2024)
+crecimiento_soja  <- analizar_crecimiento(soja_serie_1941_2023)
+crecimiento_maiz  <- analizar_crecimiento(maiz_serie_1923_2023)
 
+datos_crecimiento <- bind_rows(crecimiento_trigo, crecimiento_soja, crecimiento_maiz)
 
-# Filtramos 1947 / 2023 para tener todos los cultivos todos los años y poder hacer otros análisis.
+datos_crecimiento |>
+  ggplot(aes(x = años_crecio, y = total_anios, colour = cultivo_nombre)) +
+  geom_point(size = 3) +
+  labs(
+    title = "Relación entre años con crecimiento y total de años",
+    x = "Años con crecimiento",
+    y = "Total de años considerados"
+  ) +
+  theme_minimal()
+# datos_crecimiento |>
+#   ggplot(aes(x = reorder(departamento_nombre, pct_anios_crecio),
+#              y = pct_anios_crecio * 100,
+#              fill = cultivo_nombre)) +
+#   geom_bar(stat = "identity", position = "dodge") +
+#   coord_flip() +
+#   facet_wrap(~ provincia_nombre, scales = "free_y") +  # 👈 agrupa por provincia
+#   labs(
+#     title = "Crecimiento por cultivo, departamento y provincia",
+#     x = "Departamento",
+#     y = "% de años con crecimiento",
+#     fill = "Cultivo"
+#   ) +
+#   theme_minimal() +
+#   theme(
+#     axis.text.y = element_text(size = 8),
+#     legend.position = "bottom"
+#   )
 
-datos <- bind_rows(maiz_serie_1923_2023, soja_serie_1941_2023, trigo_serie_1927_2024) |>
-  filter(anio >= 1947 & anio <= 2023)
+#Cuales fueron los departamentos con mayor crecimiento? medimos el crecimiento si la cantidad de 
+# superficie_sembrada_ha aumentó de un año para otro. Contamos la cantidad de años con crecimiento 
+#para el total de años de los cuales tenemos datos. Por ejemplo si un departamento creció 5 de 20 años, creció un 25%.
 
 # Parámetros Generales para todos los gráficos.
 # theme_set(theme_light())
