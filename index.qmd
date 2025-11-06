@@ -138,9 +138,9 @@ dfInd <-
   stack()
 names(dfInd) <- c("valor", "variable")
 ggplot(dfInd, aes(x = variable, y = valor)) +
-  geom_boxplot()+
+  geom_boxplot() +
   labs(
-    title = "Gráfico 2: Box Plots Medidas." 
+    title = "Gráfico 2: Box Plots Medidas."
   )
 ```
 
@@ -170,11 +170,13 @@ datos |>
     aes(xintercept = 2008, linetype = "Conflicto con\nel campo"),
     lwd = 0.9, lineend = "round",
   ) + # Comienza la siembra directa
-  labs(x = "Año", 
-       y = "Superficie Sembrada en millones de ha.", 
-       color = "Cultivos", 
-       title = "Gráfico 3: Evolución de la superficie sembrada.", 
-       subtitle = "En millones de hectáreas") +
+  labs(
+    x = "Año",
+    y = "Superficie Sembrada en millones de ha.",
+    color = "Cultivos",
+    title = "Gráfico 3: Evolución de la superficie sembrada.",
+    subtitle = "En millones de hectáreas"
+  ) +
   scale_colour_brewer(palette = "Dark2") +
   geom_text_repel(
     data = \(d) d |>
@@ -216,11 +218,13 @@ datos |>
   group_by(provincia_nombre, cultivo_nombre) |>
   summarise(superficie_sembrada_ha = sum(superficie_sembrada_ha)) |>
   ggplot() +
-  labs(y = "Provincia", 
-       x = "Superficie Sembrada en millones de ha.", 
-       color = "Cultivos", 
-       title = "Gráfico 4: Superficie sembrada por provincia.", 
-       subtitle = "En millones de hectáreas") +
+  labs(
+    y = "Provincia",
+    x = "Superficie Sembrada en millones de ha.",
+    color = "Cultivos",
+    title = "Gráfico 4: Superficie sembrada por provincia.",
+    subtitle = "En millones de hectáreas"
+  ) +
   aes(
     x = superficie_sembrada_ha / 1000000,
     y = reorder(provincia_nombre, superficie_sembrada_ha),
@@ -318,13 +322,13 @@ animacion <- datos |>
   labs(
     title = "Gráfico 5: Evolución de superficies y producción (Año: {closest_state})",
     subtitle = "Superficien en millones de ha.",
-    x = "Superficie sembrada (ha)" ,
+    x = "Superficie sembrada (ha)",
     y = "Superficie cosechada (ha)",
     size = "Producción (t)",
     color = "Cultivo"
   ) +
   theme_minimal() +
-  transition_states(anio, transition_length = 1, state_length = 1)+
+  transition_states(anio, transition_length = 1, state_length = 1) +
   theme(legend.position = "none")
 animacion
 ```
@@ -387,7 +391,7 @@ grafico <-
   filter(cultivo_nombre == "trigo") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -396,15 +400,14 @@ grafico <-
   labs(
     title = "Gráfico 6: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Trigo.",
-    x = "Rendimiento de Trigo (Kg / ha)", 
+    x = "Rendimiento de Trigo (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
-
+# ggplotly(grafico, tooltip = "text")
 ```
 
 #### Maíz.
@@ -412,13 +415,13 @@ grafico
 ```{r}
 #| echo: false
 #| warning: false
-  
+
 grafico <-
   datos |>
   filter(cultivo_nombre == "maíz") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -427,14 +430,14 @@ grafico <-
   labs(
     title = "Gráfico 7: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Maíz.",
-    x = "Rendimiento de Maíz (Kg / ha)", 
+    x = "Rendimiento de Maíz (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
+# ggplotly(grafico, tooltip = "text")
 ```
 
 #### Soja
@@ -442,13 +445,13 @@ grafico
 ```{r}
 #| echo: false
 #| warning: false
-  
+
 grafico <-
   datos |>
   filter(cultivo_nombre == "soja") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -457,14 +460,14 @@ grafico <-
   labs(
     title = "Gráfico 8: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Soja.",
-    x = "Rendimiento de Soja (Kg / ha)", 
+    x = "Rendimiento de Soja (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
+# ggplotly(grafico, tooltip = "text")
 ```
 
 En una primera versión, use plotly, pero generaba un hltm demasiado pesado. Graficando con ggplot directamente se puede ver el punto marcado con un html liviano.
@@ -498,55 +501,60 @@ Los outliers de rendimiento_kgxha eliminados fueron:\
 #| include: false
 #| paged-print: false
 # Outliers Rendimiento Soja
-qs <- datos |> 
-    filter(cultivo_nombre == 'soja') |> 
-    select(rendimiento_kgxha) |> 
-    quantile(probs = c(0.25, 0.75), na.rm = TRUE)
+qs <- datos |>
+  filter(cultivo_nombre == "soja") |>
+  select(rendimiento_kgxha) |>
+  quantile(probs = c(0.25, 0.75), na.rm = TRUE)
 
-q1 <- qs['25%'][1]
-q3 <- qs['75%'][1]
+q1 <- qs["25%"][1]
+q3 <- qs["75%"][1]
 IQR <- q3 - q1
 
-outliers_soja <- datos |> 
-    filter(cultivo_nombre == 'soja', 
-           !is.na(rendimiento_kgxha), 
-           rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR) 
+outliers_soja <- datos |>
+  filter(
+    cultivo_nombre == "soja",
+    !is.na(rendimiento_kgxha),
+    rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR
+  )
 
 
 # Outliers Rendimiento Maiz
-qs <- datos |> 
-    filter(cultivo_nombre == 'maíz') |> 
-    select(rendimiento_kgxha) |> 
-    quantile(probs = c(0.25, 0.75), na.rm = TRUE)
+qs <- datos |>
+  filter(cultivo_nombre == "maíz") |>
+  select(rendimiento_kgxha) |>
+  quantile(probs = c(0.25, 0.75), na.rm = TRUE)
 
-q1 <- qs['25%'][1]
-q3 <- qs['75%'][1]
+q1 <- qs["25%"][1]
+q3 <- qs["75%"][1]
 IQR <- q3 - q1
 
-outliers_maiz <- datos |> 
-    filter(cultivo_nombre == 'maíz', 
-           !is.na(rendimiento_kgxha), 
-           rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR) 
+outliers_maiz <- datos |>
+  filter(
+    cultivo_nombre == "maíz",
+    !is.na(rendimiento_kgxha),
+    rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR
+  )
 
 # Outliers Rendimiento Trigo
-qs <- datos |> 
-    filter(cultivo_nombre == 'trigo') |> 
-    select(rendimiento_kgxha) |> 
-    quantile(probs = c(0.25, 0.75), na.rm = TRUE)
+qs <- datos |>
+  filter(cultivo_nombre == "trigo") |>
+  select(rendimiento_kgxha) |>
+  quantile(probs = c(0.25, 0.75), na.rm = TRUE)
 
-q1 <- qs['25%'][1]
-q3 <- qs['75%'][1]
+q1 <- qs["25%"][1]
+q3 <- qs["75%"][1]
 IQR <- q3 - q1
 
-outliers_trigo <- datos |> 
-    filter(cultivo_nombre == 'trigo', 
-           !is.na(rendimiento_kgxha), 
-           rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR) 
+outliers_trigo <- datos |>
+  filter(
+    cultivo_nombre == "trigo",
+    !is.na(rendimiento_kgxha),
+    rendimiento_kgxha > q3 + 1.5 * IQR | rendimiento_kgxha < q1 - 1.5 * IQR
+  )
 
 outliers <- bind_rows(outliers_trigo, outliers_maiz, outliers_soja)
-datos_sin_outliers <- 
+datos_sin_outliers <-
   anti_join(datos, outliers, by = c("cultivo_nombre", "anio", "campania", "provincia_id", "departamento_id"))
-
 ```
 
 ```{r}
@@ -555,12 +563,11 @@ datos_sin_outliers <-
 #| warning: false
 #| paged-print: false
 library("DT")
-outliers |> 
-  group_by( cultivo_nombre, provincia_nombre, departamento_nombre)  |> 
-  summarise('Cant. Registros' = n(), Max = max(rendimiento_kgxha), Min = min(rendimiento_kgxha)) |> 
-  arrange(cultivo_nombre, provincia_nombre, departamento_nombre) |> 
+outliers |>
+  group_by(cultivo_nombre, provincia_nombre, departamento_nombre) |>
+  summarise("Cant. Registros" = n(), Max = max(rendimiento_kgxha), Min = min(rendimiento_kgxha)) |>
+  arrange(cultivo_nombre, provincia_nombre, departamento_nombre) |>
   datatable(options = list(pageLength = 10))
-  
 ```
 
 ```{r}
@@ -580,7 +587,7 @@ grafico <-
   filter(cultivo_nombre == "trigo") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -589,28 +596,27 @@ grafico <-
   labs(
     title = "Gráfico 9: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Trigo. Sin Outliers",
-    x = "Rendimiento de Trigo (Kg / ha)", 
+    x = "Rendimiento de Trigo (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
-
+# ggplotly(grafico, tooltip = "text")
 ```
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
-  
+
 grafico <-
   datos_sin_outliers |>
   filter(cultivo_nombre == "maíz") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -619,27 +625,27 @@ grafico <-
   labs(
     title = "Gráfico 10: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Maíz. Sin Outliers",
-    x = "Rendimiento de Maíz (Kg / ha)", 
+    x = "Rendimiento de Maíz (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
+# ggplotly(grafico, tooltip = "text")
 ```
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
-  #Repetimos sin los outliers.
+# Repetimos sin los outliers.
 grafico <-
   datos_sin_outliers |>
   filter(cultivo_nombre == "soja") |>
   ggplot() +
   aes(
-    x = rendimiento_kgxha, 
+    x = rendimiento_kgxha,
     y = superficie_sembrada_ha / 1000000,
     color = provincia_nombre,
     label = departamento_nombre, text = etiqueta
@@ -648,14 +654,14 @@ grafico <-
   labs(
     title = "Gráfico 11: Relación entre Rendimiento y Poducción para los Departamentos.",
     subtitle = "Soja. Sin Outliers",
-    x = "Rendimiento de Soja (Kg / ha)", 
+    x = "Rendimiento de Soja (Kg / ha)",
     y = "Superficie Sembrada (en millones de ha.)",
     color = "Provincia"
-  ) + 
+  ) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "none")
 grafico
-#ggplotly(grafico, tooltip = "text")
+# ggplotly(grafico, tooltip = "text")
 ```
 
 ```{r}
@@ -665,13 +671,13 @@ grafico
 #| paged-print: false
 dfInd <-
   datos_sin_outliers |>
-#  filter(provincia_nombre == "Santa Fe", departamento_nombre == "San Jerónimo") |> 
-  select(cultivo_nombre, rendimiento_kgxha) 
+  #  filter(provincia_nombre == "Santa Fe", departamento_nombre == "San Jerónimo") |>
+  select(cultivo_nombre, rendimiento_kgxha)
 
-#names(dfInd) <- c("valor", "variable")
+# names(dfInd) <- c("valor", "variable")
 ggplot(dfInd, aes(x = cultivo_nombre, y = rendimiento_kgxha)) +
-  geom_boxplot()+
+  geom_boxplot() +
   labs(
-    title = "Gráfico 12: Box Plots Rendimiento Sin Outliers." 
+    title = "Gráfico 12: Box Plots Rendimiento Sin Outliers."
   )
 ```
