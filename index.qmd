@@ -1,6 +1,9 @@
 ---
 title: "Trabajo Final"
-format: html
+format:
+  html:
+    embed-resources: true
+    css: estilos/style.css
 lang: es
 author:
   name: "Martín Ceriotti"
@@ -9,8 +12,6 @@ editor: visual
 toc: true
 toc-location: left
 toc-title: "Tabla de contenidos"
-html:
-    embed-resources: true
 ---
 
 ## Trabajo Práctico Final de Análisis Inteligente de Datos.
@@ -36,6 +37,7 @@ El análisis que voy a realizar, es sobre la producción de soja, maíz y trigo 
 | rendimiento_kgxha | Número entero (integer) | Rendimiento en kilos por hectárea.  |
 
 ```{r}
+#| label: carga
 #| message: false
 #| warning: false
 #| include: false
@@ -74,6 +76,7 @@ options(repr.plot.width = 15, repr.plot.height = 8)
 ## Análisis Gráfico y Descriptivo Preliminar
 
 ```{r}
+#| label: descriptivo
 #| echo: false
 res <- datos |>
   select(superficie_sembrada_ha, superficie_cosechada_ha, produccion_tm, rendimiento_kgxha) |>
@@ -107,6 +110,7 @@ knitr::kable(data.frame(res), digits = 2)
 Es de esperar que a las medidas estén correlacionadas dado que a mayor superficie sembrada se espera mayor produccion. La única que no está correlacionada es el rendimiento por ha.
 
 ```{r}
+#| label: correlaciones
 #| echo: false
 #| message: false
 #| warning: false
@@ -128,6 +132,7 @@ Hay gran variabilidad en los datos, ya que hay muchos departamentos de variado t
 
 ```{r}
 #| echo: false
+#| label: boxplot
 #| message: false
 #| warning: false
 
@@ -208,6 +213,7 @@ En el caso del trigo, la serie se mantiene relativamente estable. Para el maíz 
 
 ```{r}
 #| echo: false
+#| label: historico
 #| message: false
 #| warning: false
 #| paged-print: false
@@ -241,6 +247,7 @@ Las provincias de mayor producción de los cultivos en estudio son Buenos Aires,
 ### Mejores Rindes Históricos.
 
 ```{r}
+#| label: mejores
 #| echo: false
 #| message: false
 #| warning: false
@@ -262,6 +269,7 @@ knitr::kable(data.frame(res), digits = 2)
 ### Mejores Campañas de la historia.
 
 ```{r}
+#| label: mejores campañas
 #| echo: false
 #| message: false
 #| warning: false
@@ -276,12 +284,37 @@ res <- datos |>
 knitr::kable(data.frame(res), digits = 2)
 ```
 
-### Evolución Superficie Sembrada Vs. Cosechada.
+De acuerdo a estimaciones de la bolsa de comercio de Rosario, la campaña 2025/2026 será record en cosecha de trigo, con una marca histórica record.
+
+[Cosecha Record de Trigo](https://www.lanacion.com.ar/economia/campo/megacampana-confirmaron-que-la-argentina-tendra-la-mayor-cosecha-de-trigo-de-la-historia-nid12112025/ "Cosecha Record de Trigo"){.uri}
+
+### Peores Campañas de la historia.
 
 ```{r}
+#| label: peores campañas
 #| echo: false
 #| message: false
 #| warning: false
+library(htmltools)
+res <- datos |>
+  group_by(campania) |>
+  summarise(produccion_tm = sum(produccion_tm, na.rm = TRUE)) |>
+  ungroup() |>
+  arrange(produccion_tm) |>
+  slice_head(n = 10)
+
+knitr::kable(data.frame(res), digits = 2)
+```
+
+```{r}
+#| eval: false
+#| include: false
+### Evolución Superficie Sembrada Vs. Cosechada.
+#| label: evolucion
+#| eval: false
+#| message: false
+#| warning: false
+#| include: false
 
 # datos |>
 #   ggplot(aes(x = superficie_sembrada_ha, y = superficie_cosechada_ha)) +
@@ -330,10 +363,11 @@ animacion <- datos |>
   theme_minimal() +
   transition_states(anio, transition_length = 1, state_length = 1) +
   theme(legend.position = "none")
-animacion
+#animacion
 ```
 
 ```{r}
+#| label: evolucion 2
 #| eval: false
 #| include: false
 # Gráfico de puntos: rendimiento por departamento
@@ -375,6 +409,7 @@ Podemos apreciar "outliers" planteados en la tabla de mejores rendimientos hist�
 #### Trigo.
 
 ```{r}
+#| label: evolucion 3
 #| echo: false
 #| message: false
 #| warning: false
@@ -413,6 +448,7 @@ grafico
 #### Maíz.
 
 ```{r}
+#| label: evolucion 4
 #| echo: false
 #| warning: false
 
@@ -443,6 +479,7 @@ grafico
 #### Soja
 
 ```{r}
+#| label: evolucion 5
 #| echo: false
 #| warning: false
 
@@ -490,12 +527,8 @@ $$
 rendimiento_kgxha > q3 + 1.5 * IQR
 $$
 
-Los outliers de rendimiento_kgxha eliminados fueron:\
-
-```         
-```
-
 ```{r}
+#| label: outliers
 #| message: false
 #| warning: false
 #| include: false
@@ -558,9 +591,10 @@ datos_sin_outliers <-
 ```
 
 ```{r}
-#| echo: false
+#| label: outliers 2
 #| message: false
 #| warning: false
+#| include: false
 #| paged-print: false
 library("DT")
 outliers |>
@@ -570,7 +604,10 @@ outliers |>
   datatable(options = list(pageLength = 10))
 ```
 
+### Trigo. Relación entre Rendimiento y Poducción para los Departamentos.
+
 ```{r}
+#| label: outliers 3
 #| echo: false
 #| message: false
 #| warning: false
@@ -606,7 +643,10 @@ grafico
 # ggplotly(grafico, tooltip = "text")
 ```
 
+### Maíz. Relación entre Rendimiento y Poducción para los Departamentos.
+
 ```{r}
+#| label: outliers 4
 #| echo: false
 #| message: false
 #| warning: false
@@ -634,6 +674,8 @@ grafico <-
 grafico
 # ggplotly(grafico, tooltip = "text")
 ```
+
+### Soja. Relación entre Rendimiento y Poducción para los Departamentos.
 
 ```{r}
 #| echo: false
@@ -664,7 +706,10 @@ grafico
 # ggplotly(grafico, tooltip = "text")
 ```
 
+### Box Plots Rendimiento Sin Outliers.
+
 ```{r}
+#| label: outliers 5
 #| echo: false
 #| message: false
 #| warning: false
@@ -678,6 +723,138 @@ dfInd <-
 ggplot(dfInd, aes(x = cultivo_nombre, y = rendimiento_kgxha)) +
   geom_boxplot() +
   labs(
+    x = "Cultivo",
+    y = "Rendimiento (kg/ha)",
     title = "Gráfico 12: Box Plots Rendimiento Sin Outliers."
   )
 ```
+
+## Mapas
+
+### Cómo fue la distribución en la provincia de Santa Fe en la mejor Campaña para cada Cultivo (2018/2019).
+
+Con la ayuda de los datos provenientes del Servicio de Catastro e Información Territorial de la provincia de Santa Fe, logramos los siguientes mapas donde se destacan los Departamentos de la provincia con mayores rindes. La campaña 2018/2019 estuvo marcada por abundantes precipitaciones durante las fechas clave de siembra y evolución de los cultivos. De hecho, durante la cosecha de soja se reportaron algunas enfermedades, como hongos, principalmente en sojas tardías.
+[https://news.agrofy.com.ar/noticia/180607/santa-fe-lluvias-ocasionaron-hongos-y-vuelco-plantas-soja-tardia](Fuente.)
+Podemos ver que el sur de la provincia de Santa Fe performa mejor en cualquier de los cultivos.
+
+
+
+```{r}
+#| label: mapas
+#| message: false
+#| warning: false
+#| include: false
+#| paged-print: false
+argentina <- sf::read_sf(
+  dsn = "mapas",                             #carpeta
+  layer = "departamento"                     #nombre archivo
+  )
+
+provincias <- argentina %>% 
+  filter(fdc %in% c("Servicio de Catastro e Información Territorial")) %>% 
+  mutate(Nombre = str_wrap(nam, 8)) #separamos nombres largos en 2 lineas
+
+soja <- datos |> 
+  filter(provincia_nombre %in% c('Santa Fe'),
+         cultivo_nombre == "soja",
+         campania == "2018/2019")
+trigo <- datos |> 
+  filter(provincia_nombre %in% c('Santa Fe'),
+         cultivo_nombre == "trigo",
+         campania == "2018/2019")
+maiz <- datos |> 
+  filter(provincia_nombre %in% c('Santa Fe'),
+         cultivo_nombre == "maíz",
+         campania == "2018/2019")
+
+maiz_gp <- provincias |> 
+            left_join(maiz, by = c("in1" = "departamento_id")) 
+trigo_gp <- provincias |> 
+            left_join(trigo, by = c("in1" = "departamento_id")) 
+soja_gp <- provincias |> 
+            left_join(soja, by = c("in1" = "departamento_id")) 
+```
+
+### Soja
+
+```{r, fig.width=26, fig.height=20 }
+#| label: mapa soja
+#| echo: false
+#| message: false
+#| warning: false
+ 
+  ggplot(data = soja_gp) +
+  aes(fill = rendimiento_kgxha) + 
+  geom_sf() +
+  geom_sf_label(aes(label = nam)) + 
+  theme_set(theme_light()) + 
+  scale_fill_gradient(low = "yellow", high = "forestgreen", name = "Rendimiento (kg/ha)") +
+  theme(
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 16),
+    legend.key.height = unit(1.4, "cm"),
+    legend.key.width = unit(0.6, "cm")
+  )
+    
+
+```
+
+En la campaña 2018/2019 el departamento Iriondo se destaca con los mayores rindes de soja.
+
+### Maíz
+
+```{r, fig.width=26, fig.height=20 }
+#| label: mapa maiz
+#| echo: false
+#| message: false
+#| warning: false
+ 
+  ggplot(data = maiz_gp) +
+  aes(fill = rendimiento_kgxha) + 
+  geom_sf() +
+  geom_sf_label(aes(label = nam)) + 
+  theme_set(theme_light()) + 
+  scale_fill_gradient(low = "lightblue", high = "orange", name = "Rendimiento (kg/ha)") +
+  theme(
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 16),
+    legend.key.height = unit(1.4, "cm"),
+    legend.key.width = unit(0.6, "cm")
+  )
+    
+
+```
+
+En el caso del maíz, el departamento General López tuvo los mejores rendimientos.
+
+### Trigo
+
+```{r, fig.width=26, fig.height=20 }
+#| label: mapa trigo
+#| echo: false
+#| message: false
+#| warning: false
+ 
+  ggplot(data = trigo_gp) +
+  aes(fill = rendimiento_kgxha) + 
+  geom_sf() +
+  geom_sf_label(aes(label = nam)) + 
+  theme_set(theme_light()) + 
+  scale_fill_gradient(low = "lightgreen", high = "darkorange",  name = "Rendimiento (kg/ha)") +
+  theme(
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 16),
+    legend.key.height = unit(1.4, "cm"),
+    legend.key.width = unit(0.6, "cm")
+  )
+    
+
+```
+
+En el caso del trigo, tenemos los mismos resultados que para el Maíz, con General López destacado.
+
+# Conclusión.
+
+Dependiendo de las necesidades del organismo o empresa que pida este análisis se deberá profundizar en las distintas grillas o gráficos que se realizaron. Mejorar los mapas dependiendo de la zona de interes, revisar superficies particulares con sus rindes, etc.
+
+Este pequeño análisis pretende dar un vistazo a vuelo de pájaro de lo que sucedió históricamente en el país y como le fue a los distintos departamentos de la provincia de Santa Fe en la mejor campaña de la historia.
